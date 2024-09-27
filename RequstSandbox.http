@@ -1,0 +1,8 @@
+### GET request to example server
+GET https://examples.http-client.intellij.net/get
+    ?generated-in=Aqua
+
+### GET request to example server
+GET http://3.68.165.45/player/create?age=18&gender=male&login=admn1&password=admin1&role=admin&screenName=super_admin
+Content-Type: application/json
+###

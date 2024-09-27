@@ -1,0 +1,23 @@
+------------------------------------------GET /player/create/{editor}---------------------------------------------------
+
+    name:           GET /player/create/{editor} use GET request.
+    description:    Better to switch player/create to POST HTTP Request with Body instead of GET with path_params
+
+
+
+////Critical:
+    name:           GET /player/create/{editor} Password should be mandatory field.
+    description:    In GET /player/create/{editor} endpoint "Password" field must be mandatory.
+
+    name:           GET /player/create/{editor} {editor} param mustn't be used.
+    description:    GET /player/create/{editor} use {editor} as mandatory parameter but it's mustn't be used here.
+                    Endpoint doesn't work with it. It's description and use in Path must be removed.
+
+    name:           GET /player/create/{editor} Must provide more details if request fail for any reason.
+    description:    Now if GET /player/create/{editor} request failed then No details provided by Backend.
+                    Need to add details in failed response.
+
+
+
+------------------------------------------DELETE /player/delete/{editor}---------------------------------------------------
+
