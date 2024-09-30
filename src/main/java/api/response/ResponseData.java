@@ -1,6 +1,6 @@
 package api.response;
 
-import api.response.models.posts.BaseResponse;
+import api.response.models.BaseResponseDTO;
 import io.restassured.response.Response;
 
 import java.util.List;
@@ -12,11 +12,11 @@ public class ResponseData {
         this.response = response;
     }
 
-    public <T extends BaseResponse> T as(Class<T> clazz) {
+    public <T extends BaseResponseDTO> T as(Class<T> clazz) {
         return response.as(clazz);
     }
 
-    public <T extends BaseResponse> List<T> asList(String jsonPath, Class<T> clazz) {
+    public <T extends BaseResponseDTO> List<T> asList(String jsonPath, Class<T> clazz) {
         return response.jsonPath().getList(jsonPath, clazz);
     }
 }

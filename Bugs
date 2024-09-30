@@ -1,21 +1,99 @@
+---------------------------------------------------General--------------------------------------------------------------
+
+    All General errors should be discuss with a team.
+
+    name:           Add more description for parameters in swagger.
+    description:    Need to provide more details for params in Swagger.
+                    Example:
+                        - Age: missing information about range. Now it's passed in range (17 - 60)
+                        - Role: need to add description which Enum value is using here
+                        - Gender: need to add description which Enum value is using here
+                        - Editor: no description about this entity.
+
+
+
+
 ------------------------------------------GET /player/create/{editor}---------------------------------------------------
 
-    name:           GET /player/create/{editor} use GET request.
+    name:           GET /player/create/{editor} use GET request instead of POST.
     description:    Better to switch player/create to POST HTTP Request with Body instead of GET with path_params
 
 
+    name:           GET /player/create/{editor} 400 error instead of 403
+    description:    when request sent into GET /player/create/{editor} endpoint with incorrect path params then Backend
+                    respond with 400 error code with no information.
+    suggestions:    1. Use 403 Forbidden error instead of 400 error which not described on Swagger.
+                    2. Add error description into error message instead of empty which is using now for 403 error code.
 
-////Critical:
-    name:           GET /player/create/{editor} Password should be mandatory field.
-    description:    In GET /player/create/{editor} endpoint "Password" field must be mandatory.
 
-    name:           GET /player/create/{editor} {editor} param mustn't be used.
-    description:    GET /player/create/{editor} use {editor} as mandatory parameter but it's mustn't be used here.
-                    Endpoint doesn't work with it. It's description and use in Path must be removed.
+    name:           GET /player/create/{editor} Password field should be mandatory
+    description:    (Ofcourse I didn't see any reqs but when some User-type entity created Password it's an mandatory field)
+                    Now when new Player created via GET /player/create/{editor} request field Password could be skipped.
+                    Need to mark it as mandatory.
 
-    name:           GET /player/create/{editor} Must provide more details if request fail for any reason.
-    description:    Now if GET /player/create/{editor} request failed then No details provided by Backend.
-                    Need to add details in failed response.
+
+    name:           When player created via GET /player/create/{editor} request Backend returns only "id" and "login" fields
+    description:    Perform any request which created new Player:
+                    e.g. http://3.68.165.45/player/create/supervisor?login=UdZof64264&password=sQVlX69002&screenName=djaAk69214&gender=male&role=user&age=17
+                    Backend respond with Code 200 and Body:
+                    {
+                      "id": 2024912916,
+                      "login": "UdZof64264",
+                      "password": null,
+                      "screenName": null,
+                      "gender": null,
+                      "age": null,
+                      "role": null
+                    }
+                    Endpoint POST http://3.68.165.45/player/get
+                    {
+                      "playerId": 2024912916
+                    }
+                    return all correct values
+                    {
+                      "id": 2024912916,
+                      "login": "UdZof64264",
+                      "password": "sQVlX69002",
+                      "screenName": "djaAk69214",
+                      "gender": "male",
+                      "age": 17,
+                      "role": "user"
+                    }
+
+                    Expected that all fields will be fill out with sent parameters
+
+
+    name:           GET /player/create/{editor} gender field should pass only options from Enum.
+    description:    Now Backend pass any string value instead of validate it based on Enum options:
+                    GET http://3.68.165.45/player/create/supervisor?login=UdZof64264&password=sQVlX69002&screenName=djaAk69214&gender=sjbfsbd&role=user&age=17
+                    {
+                      "id": 2024912916,
+                      "login": "UdZof64264",
+                      "password": "sQVlX69002",
+                      "screenName": "djaAk69214",
+                      "gender": "sjbfsbd",
+                      "age": 17,
+                      "role": "user"
+                    }
+                    Need to add correct field validation for this field.
+
+
+    Critical:
+    name:           GET /player/create/{editor} Password field should be mandatory
+    description:    (Ofcourse I didn't see any reqs but when some User-type entity created Password it's an mandatory field)
+                    Now when new Player created via GET /player/create/{editor} request field Password could be skipped.
+                    Need to mark it as mandatory.
+
+
+    Critical:
+    name:           GET /player/create/{editor} Player updated via Create endpoint.
+    description:    (Actually here I'm not sure this is a bug not a feature but behavior kind a strange)
+                    Based on Backend logic it Create new Player entity in case when request contains "login" value
+                    which is absent in db. But in case when "login" already present in db Backend update other fields
+                    instead of show some error message that user with such "login" already exist.
+
+
+
 
 
 
