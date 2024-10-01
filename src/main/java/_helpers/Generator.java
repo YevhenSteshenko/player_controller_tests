@@ -5,9 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import lombok.experimental.UtilityClass;
 
-import java.util.Arrays;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @UtilityClass
 public class Generator {
@@ -64,10 +62,5 @@ public class Generator {
 
     public static Integer randomInt(Integer from, Integer to) {
         return new Random().nextInt(to - from + 1) + from;
-    }
-
-    public static <T extends Enum<?>> T randomEnum(Class<T> clazz) {
-        int i = new Random().nextInt((int) Arrays.stream(clazz.getEnumConstants()).filter(e -> !e.name().equals("NONEXISTENT")).count());
-        return clazz.getEnumConstants()[i];
     }
 }

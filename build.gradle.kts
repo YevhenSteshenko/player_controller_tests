@@ -32,6 +32,7 @@ dependencies {
     testImplementation("org.testng:testng:7.10.2")
 
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
+    api("org.projectlombok:lombok:1.18.34")
     compileOnly("org.projectlombok:lombok:1.18.34")
     annotationProcessor("org.projectlombok:lombok:1.18.34")
 }

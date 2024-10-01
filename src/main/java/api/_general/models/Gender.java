@@ -1,4 +1,4 @@
-package api.response.models.player.general;
+package api._general.models;
 
 import com.google.gson.annotations.SerializedName;
 
