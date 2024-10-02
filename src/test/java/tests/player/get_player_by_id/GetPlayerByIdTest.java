@@ -43,7 +43,7 @@ public class GetPlayerByIdTest {
 
     @Issue("7")
     @Test(description = "Try to get Player Data via invalid requests", dataProvider = "invalidData")
-    public void testGetPlayerByIdNegative(String body, int statusCode) {
+    public void testGetPlayerByIdNegative(String body, int statusCode, String message) {
         new PlayerRequest().getPlayerByID(body, statusCode);
     }
 
@@ -56,9 +56,9 @@ public class GetPlayerByIdTest {
                 new Object[]
                         //NEGATIVE
                         //Check Body validation schema
-                        {"", 400},
-                        {"{}", 400},
-                        {new Gson().toJson(invalidParameter), 400},
+                        {"", 400, "Empty body"},
+                        {"{}", 403, "Empty JSON"},
+                        {new Gson().toJson(invalidParameter), 403, "Non-existent params in body"},
         };
     }
 }

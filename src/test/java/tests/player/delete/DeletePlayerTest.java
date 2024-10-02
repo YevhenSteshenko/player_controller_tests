@@ -62,7 +62,7 @@ public class DeletePlayerTest {
     @Test(description = "Try to Delete Player with wrong body params"
             , dataProvider = "wrongBodyForDeleteUserOperation"
     )
-    public void testDeletePlayerWithWrongBodyParams(PlayerRole role, String body, int statusCode) {
+    public void testDeletePlayerWithWrongBodyParams(PlayerRole role, String body, int statusCode, String message) {
         new PlayerRequest().deletePlayer(role, body, statusCode);
     }
 
@@ -88,9 +88,9 @@ public class DeletePlayerTest {
                 new Object[]
                         //NEGATIVE
                         //Try to delete Player with wrong body params
-                        {PlayerRole.SUPERVISOR, "", 400},
-                        {PlayerRole.SUPERVISOR, "{}", 403},
-                        {PlayerRole.SUPERVISOR, new Gson().toJson(invalidParameter), 403},
+                        {PlayerRole.SUPERVISOR, "", 400, "Empty body"},
+                        {PlayerRole.SUPERVISOR, "{}", 403, "Empty JSON"},
+                        {PlayerRole.SUPERVISOR, new Gson().toJson(invalidParameter), 403, "Non-existent params in body"},
         };
     }
 }

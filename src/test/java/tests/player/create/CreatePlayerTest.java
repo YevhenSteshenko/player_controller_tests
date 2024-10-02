@@ -49,7 +49,7 @@ public class CreatePlayerTest {
     @Issue("3")
     @Test(description = "Create player(negative scenarios)"
             , dataProvider = "invalidData")
-    public void testCreatePlayerWithInvalidData(PlayerRole editor, PlayerCreateResponseDTO player, int statusCode) {
+    public void testCreatePlayerWithInvalidData(PlayerRole editor, PlayerCreateResponseDTO player, int statusCode, String description) {
         new PlayerRequest()
                 .createPlayer(editor, player, statusCode);
     }
@@ -71,28 +71,28 @@ public class CreatePlayerTest {
                 new Object[]
                         //NEGATIVE
                         //Try to Create Player with incorrect options for different Editor type
-                        {PlayerRole.USER, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER), 403},
-                        {PlayerRole.USER, PlayerHelper.generatePlayerCreateData(Gender.FEMALE, PlayerRole.ADMIN), 403},
-                        {PlayerRole.ADMIN, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER), 403},
-                        {PlayerRole.ADMIN, PlayerHelper.generatePlayerCreateData(Gender.FEMALE, PlayerRole.ADMIN), 403},
-                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.FEMALE, PlayerRole.NONEXISTENT), 400},
-                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.SUPERVISOR), 400},
-                        {PlayerRole.NONEXISTENT, PlayerHelper.generatePlayerCreateData(Gender.FEMALE, PlayerRole.USER), 403},
-                        {PlayerRole.NONEXISTENT, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.ADMIN), 403},
+                        {PlayerRole.USER, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER), 403, "Incorrect Editor USER"},
+                        {PlayerRole.USER, PlayerHelper.generatePlayerCreateData(Gender.FEMALE, PlayerRole.ADMIN), 403, "Incorrect Editor USER"},
+                        {PlayerRole.ADMIN, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER), 403, "Incorrect Editor ADMIN"},
+                        {PlayerRole.ADMIN, PlayerHelper.generatePlayerCreateData(Gender.FEMALE, PlayerRole.ADMIN), 403, "Incorrect Editor ADMIN"},
+                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.FEMALE, PlayerRole.NONEXISTENT), 400, "Incorrect Role NONEXISTENT"},
+                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.SUPERVISOR), 400, "Incorrect Role SUPERVISOR"},
+                        {PlayerRole.NONEXISTENT, PlayerHelper.generatePlayerCreateData(Gender.FEMALE, PlayerRole.USER), 403, "Incorrect Editor NONEXISTENT"},
+                        {PlayerRole.NONEXISTENT, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.ADMIN), 403, "Incorrect Editor NONEXISTENT"},
 
                         //Try to Create Player with incorrect or empty mandatory fields
-                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).login(null), 400},
-                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).password(null), 400},
-                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).age(null), 400},
-                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).age(16), 400},
-                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).age(61), 400},
-                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).gender(null), 400},
-                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).gender(Gender.NONEXISTENT), 400},
-                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).screenName(null), 400},
-                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).role(null), 400},
+                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).login(null), 400, "Empty mandatory field:login"},
+                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).password(null), 400, "Empty mandatory field:password"},
+                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).age(null), 400, "Empty mandatory field:age"},
+                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).age(16), 400, "Less then range of field:age=16"},
+                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).age(61), 400, "More then range of field:age=61"},
+                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).gender(null), 400, "Empty mandatory field:gender"},
+                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).gender(Gender.NONEXISTENT), 400, "Incorrect mandatory field:gender=NONEXISTENT"},
+                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).screenName(null), 400, "Empty mandatory field:screenName"},
+                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).role(null), 400, "Empty mandatory field:role"},
 
                         //Try to Create Player with none Editor
-                        {PlayerRole.NONE, PlayerHelper.generatePlayerCreateData(Gender.FEMALE, PlayerRole.USER), 404},
+                        {PlayerRole.NONE, PlayerHelper.generatePlayerCreateData(Gender.FEMALE, PlayerRole.USER), 404, "No Editor"},
         };
     }
 }

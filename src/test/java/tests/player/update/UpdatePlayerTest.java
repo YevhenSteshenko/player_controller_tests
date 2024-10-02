@@ -63,7 +63,7 @@ public class UpdatePlayerTest {
     @Issue("10")
     @Test(description = "Try to updated Player with incorrect data"
             , dataProvider = "invalidData")
-    public void testUpdatePlayerWithInvalidData(PlayerRole role, String playerUpdateData, int statusCode) {
+    public void testUpdatePlayerWithInvalidData(PlayerRole role, String playerUpdateData, int statusCode, String message) {
         new PlayerRequest()
                 .updatePlayer(role, this.createdPlayerData.id(), playerUpdateData, statusCode);
     }
@@ -95,14 +95,15 @@ public class UpdatePlayerTest {
                 new Object[]
                         //NEGATIVE
                         //Try update with wrong Role
-                        {PlayerRole.ADMIN, PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER).toString(), 403},
-                        {PlayerRole.USER, PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER).toString(), 403},
-                        {PlayerRole.NONE, PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER).toString(), 404},
+                        {PlayerRole.ADMIN, PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER).toString(), 403, "Update with incorrect Editor:ADMIN"},
+                        {PlayerRole.USER, PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER).toString(), 403, "Update with incorrect Editor:USER"},
+                        {PlayerRole.NONE, PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER).toString(), 404, "Update with incorrect Editor:NONE"},
 
                         //Try to update Player with wrong params
-                        {PlayerRole.SUPERVISOR, "", 400},
-                        {PlayerRole.SUPERVISOR, "{}", 400},
-                        {PlayerRole.SUPERVISOR, new Gson().toJson(invalidParameter), 400},
+                        {PlayerRole.SUPERVISOR, "", 400, "Empty body"},
+                        {PlayerRole.SUPERVISOR, "{}", 403, "Empty JSON"},
+                        {PlayerRole.SUPERVISOR, new Gson().toJson(invalidParameter), 403, "Non-existent params in body"},
+
 
         };
     }
