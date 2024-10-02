@@ -4,29 +4,92 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 
+//plugins {
+//    `java-library`
+//    `maven-publish`
+//}
+//
+//repositories {
+//    mavenLocal()
+//    maven {
+//        url = uri("https://repo.maven.apache.org/maven2/")
+//    }
+//}
+//
+//dependencies {
+//    // https://mvnrepository.com/artifact/com.google.code.gson/gson
+//    api("com.google.code.gson:gson:2.10.1")
+//    // https://mvnrepository.com/artifact/io.rest-assured/rest-assured
+//    api("io.rest-assured:rest-assured:5.5.0")
+//    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
+//    api("com.fasterxml.jackson.core:jackson-core:2.17.2")
+//    // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
+//    api("com.fasterxml.jackson.core:jackson-databind:2.17.2")
+//    // https://mvnrepository.com/artifact/io.qameta.allure/allure-testng
+//    api("io.qameta.allure:allure-testng:2.29.0")
+//
+//    // https://mvnrepository.com/artifact/org.testng/testng
+//    testImplementation("org.testng:testng:7.10.2")
+//    // https://mvnrepository.com/artifact/io.qameta.allure/allure-rest-assured
+//    implementation("io.qameta.allure:allure-rest-assured:2.29.0")
+//
+//    // https://mvnrepository.com/artifact/org.projectlombok/lombok
+//    api("org.projectlombok:lombok:1.18.34")
+//    compileOnly("org.projectlombok:lombok:1.18.34")
+//    annotationProcessor("org.projectlombok:lombok:1.18.34")
+//}
+//
+//group = "API"
+//version = "1.0-SNAPSHOT"
+//description = "api"
+//java.sourceCompatibility = JavaVersion.VERSION_11
+//
+//publishing {
+//    publications.create<MavenPublication>("maven") {
+//        from(components["java"])
+//    }
+//}
+//
+//tasks.withType<JavaCompile>() {
+//    options.encoding = "UTF-8"
+//}
+//
+//tasks.withType<Javadoc>() {
+//    options.encoding = "UTF-8"
+//}
+//
+//tasks.named<Test>("test") {
+//    useTestNG()
+//}
+
+
+
+
+
+
 plugins {
-    `java-library`
-    `maven-publish`
+    java
+    id("io.qameta.allure") version "2.9.6"
 }
+
+group = "API"
+version = "1.0-SNAPSHOT"
+description = "api"
 
 repositories {
-    mavenLocal()
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
+    mavenCentral()
 }
-
 dependencies {
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
-    api("com.google.code.gson:gson:2.10.1")
+    implementation("com.google.code.gson:gson:2.10.1")
     // https://mvnrepository.com/artifact/io.rest-assured/rest-assured
-    api("io.rest-assured:rest-assured:5.5.0")
+    implementation("io.rest-assured:rest-assured:5.5.0")
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core
-    api("com.fasterxml.jackson.core:jackson-core:2.17.2")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.17.2")
     // https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind
-    api("com.fasterxml.jackson.core:jackson-databind:2.17.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.2")
     // https://mvnrepository.com/artifact/io.qameta.allure/allure-testng
-    api("io.qameta.allure:allure-testng:2.29.0")
+    implementation("io.qameta.allure:allure-testng:2.29.0")
 
     // https://mvnrepository.com/artifact/org.testng/testng
     testImplementation("org.testng:testng:7.10.2")
@@ -34,30 +97,24 @@ dependencies {
     implementation("io.qameta.allure:allure-rest-assured:2.29.0")
 
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
-    api("org.projectlombok:lombok:1.18.34")
+    implementation("org.projectlombok:lombok:1.18.34")
     compileOnly("org.projectlombok:lombok:1.18.34")
     annotationProcessor("org.projectlombok:lombok:1.18.34")
 }
 
-group = "API"
-version = "1.0-SNAPSHOT"
-description = "api"
-java.sourceCompatibility = JavaVersion.VERSION_11
-
-publishing {
-    publications.create<MavenPublication>("maven") {
-        from(components["java"])
-    }
-}
-
-tasks.withType<JavaCompile>() {
-    options.encoding = "UTF-8"
-}
-
-tasks.withType<Javadoc>() {
-    options.encoding = "UTF-8"
-}
-
-tasks.named<Test>("test") {
+tasks.test {
     useTestNG()
+
+    // Configure Allure to generate reports
+    systemProperties = mapOf("allure.results.directory" to "target/allure-results")
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+allure {
+    version.set("2.20.0")
+    adapter.autoconfigure.set(true)
 }
