@@ -1,4 +1,4 @@
-package tests.player.get_player_id;
+package tests.player.get_player_by_id;
 
 import _annotations_description.BackendEpic;
 import _annotations_description.BackendFeature;

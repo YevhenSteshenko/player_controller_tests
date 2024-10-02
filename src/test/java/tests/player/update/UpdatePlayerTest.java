@@ -95,9 +95,9 @@ public class UpdatePlayerTest {
                 new Object[]
                         //NEGATIVE
                         //Try update with wrong Role
-                        {PlayerRole.ADMIN, PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER), 403},
-                        {PlayerRole.USER, PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER), 403},
-                        {PlayerRole.NONE, new Gson().toJson(PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER)), 404},
+                        {PlayerRole.ADMIN, PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER).toString(), 403},
+                        {PlayerRole.USER, PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER).toString(), 403},
+                        {PlayerRole.NONE, PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER).toString(), 404},
 
                         //Try to update Player with wrong params
                         {PlayerRole.SUPERVISOR, "", 400},
