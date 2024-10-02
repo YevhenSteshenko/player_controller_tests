@@ -1,9 +1,9 @@
 package api.player.request;
 
+import api._general.models.PlayerRole;
 import api.player.request.models.PlayerUpdateRequestDTO;
 import api.player.response.ResponseData;
 import api.player.response.models.PlayerCreateResponseDTO;
-import api._general.models.PlayerRole;
 import com.google.gson.Gson;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
@@ -12,10 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlayerRequest extends BaseRequest {
-    public PlayerRequest() {
-    }
-
-
     public ResponseData createPlayer(PlayerRole editor, PlayerCreateResponseDTO params, int statusCode) {
         addParams(super.specificationBuilder, params);
 
@@ -39,6 +35,15 @@ public class PlayerRequest extends BaseRequest {
         return this.post(specification, new Gson().toJson(body), statusCode);
     }
 
+    public ResponseData getPlayerByID(String body, int statusCode) {
+        RequestSpecification specification =
+                super.specificationBuilder
+                        .setBasePath("/player/get")
+                        .build();
+
+        return this.post(specification, body, statusCode);
+    }
+
     public ResponseData getAllPlayers(int statusCode) {
         RequestSpecification specification =
                 super.specificationBuilder
@@ -51,10 +56,19 @@ public class PlayerRequest extends BaseRequest {
     public ResponseData updatePlayer(PlayerRole editor, Integer playerId, PlayerUpdateRequestDTO body, int statusCode) {
         RequestSpecification specification =
                 super.specificationBuilder
-                        .setBasePath("/player/update/" + (editor.equals(PlayerRole.NONE) ? "" : editor.name().toLowerCase()) + "/" + playerId)
+                        .setBasePath("/player/update" + (editor.equals(PlayerRole.NONE) ? "" : ( "/" + editor.name().toLowerCase())) + "/" + playerId)
                         .build();
 
         return this.patch(specification, new Gson().toJson(body), statusCode);
+    }
+
+    public ResponseData updatePlayer(PlayerRole editor, Integer playerId, String body, int statusCode) {
+        RequestSpecification specification =
+                super.specificationBuilder
+                        .setBasePath("/player/update" + (editor.equals(PlayerRole.NONE) ? "" : ( "/" + editor.name().toLowerCase())) + "/" + playerId)
+                        .build();
+
+        return this.patch(specification, body, statusCode);
     }
 
     public ResponseData deletePlayer(PlayerRole editor, Integer playerID, int statusCode) {
@@ -67,6 +81,15 @@ public class PlayerRequest extends BaseRequest {
                         .build();
 
         return this.delete(specification, new Gson().toJson(body), statusCode);
+    }
+
+    public ResponseData deletePlayer(PlayerRole editor, String body, int statusCode) {
+        RequestSpecification specification =
+                super.specificationBuilder
+                        .setBasePath("/player/delete/" + (editor.equals(PlayerRole.NONE) ? "" : editor.name().toLowerCase()))
+                        .build();
+
+        return this.delete(specification, body, statusCode);
     }
 
     private ResponseData get(RequestSpecification specification, int statusCode) {

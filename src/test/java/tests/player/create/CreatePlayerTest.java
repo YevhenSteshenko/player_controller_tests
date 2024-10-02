@@ -13,7 +13,7 @@ import tests.player.PlayerHelper;
 
 public class CreatePlayerTest {
 
-    @Issue("4")
+    @Issue("2")
     @Test(description = "Create player"
             , dataProvider = "validData")
     public void testCreatePlayer(PlayerRole editor, PlayerCreateResponseDTO player) {
@@ -32,8 +32,8 @@ public class CreatePlayerTest {
         softAssert.assertAll();
     }
 
-    @Issue("8")
-    @Test(description = "Create player(negative scenarios)")
+    @Issue("4")
+    @Test(description = "Try to create existed Player")
     public void testCreateExistPlayer() {
         PlayerCreateResponseDTO player = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
         new PlayerRequest().createPlayer(PlayerRole.SUPERVISOR, player, 200);
@@ -41,10 +41,10 @@ public class CreatePlayerTest {
         new PlayerRequest().createPlayer(PlayerRole.SUPERVISOR, newPlayer.login(player.login()), 400);
     }
 
-    @Issues({@Issue("3"), @Issue("5"), @Issue("6")})
+    @Issue("3")
     @Test(description = "Create player(negative scenarios)"
             , dataProvider = "invalidData")
-    public void testCreatePlayerInvalidData(PlayerRole editor, PlayerCreateResponseDTO player, int statusCode) {
+    public void testCreatePlayerWithInvalidData(PlayerRole editor, PlayerCreateResponseDTO player, int statusCode) {
         new PlayerRequest()
                 .createPlayer(editor, player, statusCode);
     }
@@ -55,7 +55,7 @@ public class CreatePlayerTest {
                 new Object[]
                         //POSITIVE
                         //Positive Scenarios
-//                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).age(17)},
+                        {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER).age(17)},
                         {PlayerRole.SUPERVISOR, PlayerHelper.generatePlayerCreateData(Gender.FEMALE, PlayerRole.ADMIN).age(60)},
         };
     }

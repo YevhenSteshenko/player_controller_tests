@@ -1,7 +1,223 @@
+
+
+------------------------------------------GET /player/create/{editor}---------------------------------------------------
+
+    Issue 1:
+    name:           GET /player/create/{editor} use GET request instead of POST.
+    description:    Better to switch player/create to POST HTTP Request with Body instead of GET with path_params
+
+
+    Critical:
+    Issue 2:
+    name:           When player created via GET /player/create/{editor} request Backend returns only "id" and "login" fields
+    description:    Perform any request which created new Player:
+                    e.g. http://3.68.165.45/player/create/supervisor?login=UdZof64264&password=sQVlX69002&screenName=djaAk69214&gender=male&role=user&age=17
+                    Backend respond with Code 200 and Body:
+                    {
+                      "id": 2024912916,
+                      "login": "UdZof64264",
+                      "password": null,
+                      "screenName": null,
+                      "gender": null,
+                      "age": null,
+                      "role": null
+                    }
+                    Endpoint POST http://3.68.165.45/player/get
+                    {
+                      "playerId": 2024912916
+                    }
+                    return all correct values
+                    {
+                      "id": 2024912916,
+                      "login": "UdZof64264",
+                      "password": "sQVlX69002",
+                      "screenName": "djaAk69214",
+                      "gender": "male",
+                      "age": 17,
+                      "role": "user"
+                    }
+
+                    Expected that all fields will be fill out with sent parameters
+
+
+    Critical:
+    Issue 3:
+    name:           GET /player/create/{editor} Password field should be mandatory
+    description:    (Ofcourse I didn't see any reqs but when some User-type entity created Password it's an mandatory field)
+                    Now when new Player created via GET /player/create/{editor} request field Password could be skipped.
+                    Need to mark it as mandatory.
+
+
+    Critical:
+    Issue 4:
+    name:           GET /player/create/{editor} Player updated via Create endpoint.
+    description:    (Actually here I'm not sure this is a bug not a feature but behavior kind a strange)
+                    Based on Backend logic it Create new Player entity in case when request contains "login" value
+                    which is absent in db. But in case when "login" already present in db Backend update other fields
+                    instead of show some error message that user with such "login" already exist.
+
+
+------------------------------------------DELETE /player/delete/{editor}---------------------------------------------------
+
+
+    Critical:
+    Issue 5:
+    name:           DELETE /player/delete/{editor} Absent check for {editor}.
+    description:    Now there is no check for {editor} when send request DELETE /player/delete/{editor}.
+                    So any Player could be deleted by any Editor with any permissions.
+                    ### Delete Player
+                    DELETE http://3.68.165.45/player/delete/1
+                    Content-Type: application/json
+                    Accept: */*
+
+                    {
+                      "playerId": 1591736253
+                    }
+                    Response:
+                    HTTP/1.1 204
+
+                    As a result Player has been deleted:
+                    ### GET player by playerId
+                    POST http://3.68.165.45/player/get
+                    Content-Type: application/json
+                    Accept: */*
+
+                    {
+                      "playerId": 1591736253
+                    }
+                    Response:
+                    HTTP/1.1 200
+                    Content-Length: 0
+                    Date: Wed, 02 Oct 2024 14:20:47 GMT
+
+                    <Response body is empty>
+
+
+-----------------------------------------------POST /player/get------------------------------------------------------------
+
+
+    Issue 6:
+    name:           POST /player/get use POST request instead of GET.
+    description:    Better to switch player/get to GET HTTP Request with path_params instead of POST with body.
+
+
+    Issue 7:
+    name:           POST /player/get there is no Body validation schema.
+    description:    Now in request body we can sent any data and get 200 response code.
+                    Example 1:
+                    POST http://3.68.165.45/player/get
+                    {
+                      "1" : "d"
+                    }
+                    Response:
+                    HTTP/1.1 200
+                    <Response body is empty>
+
+                    Example 2:
+                    POST http://3.68.165.45/player/get
+                    {}
+                    Response:
+                    Response:
+                    HTTP/1.1 200
+                    <Response body is empty>
+
+
+---------------------------------------------GET /player/get/all-----------------------------------------------------------
+
+
+    Critical:
+    Issue 8:
+    name:           GET /player/get/all Role field not returned.
+    description:    When we try to call GET /player/get/all then role field is absent for all list objects
+                    Example:
+                    GET http://3.68.165.45/player/get/all
+                    Response:
+                    ....
+                    {
+                          "id": 1248752504,
+                          "screenName": "dmrdd",
+                          "gender": "Aphrodite",
+                          "age": 26
+                        },
+                        {
+                          "id": 1384353699,
+                          "screenName": "xclaw",
+                          "gender": "Male",
+                          "age": 49
+                        },
+                        {
+                          "id": 1940225842,
+                          "screenName": "hxvjt",
+                          "gender": "Ares",
+                          "age": 45
+                        },
+                        ........
+
+
+----------------------------------------PATCH /player/update/{editor}/{id}-------------------------------------------------
+
+    Critical:
+    Issue 9:
+    name:           PATCH /player/update/{editor}/{id} Role field can't be updated.
+    description:    When we try to update "role" field via PATCH /player/update/{editor}/{id} we get 200 status code
+                    but field save previous value.
+                    ### Update Player
+                    PATCH http://3.68.165.45/player/update/supervisor/1937342674
+                    Content-Type: application/json
+                    Accept: */*
+                    {
+                      "role": "admin"
+                    }
+                    Response:
+                    HTTP/1.1 200
+                    {
+                      "id": 1937342674,
+                      "login": "OUfoY44626",
+                      "screenName": "yKmEE60578",
+                      "gender": "male",
+                      "age": 60,
+                      "role": "user"
+                    }
+
+    Issue 10:
+    name:           PATCH /player/update/{editor}/{id} there is no Body validation schema.
+    description:    Now in request body we can sent any data and get 200 response code.
+                    Example 1:
+                    POST http://3.68.165.45/player/update/supervisor/836510313
+                    {
+                      "1" : "d"
+                    }
+                    Response:
+                    HTTP/1.1 200
+                    {
+                        "id": 836510313,
+                        "login": "dYuNr47081",
+                        "screenName": "aKBix43155",
+                        "gender": "male",
+                        "age": 51,
+                        "role": "user"
+                    }
+
+                    Example 2:
+                    POST http://3.68.165.45/player/update/supervisor/991021200
+                    {}
+                    Response:
+                    Response:
+                    HTTP/1.1 200
+                    {
+                        "id": 991021200,
+                        "login": "vmsvy71638",
+                        "screenName": "ooKeT51854",
+                        "gender": "male",
+                        "age": 24,
+                        "role": "user"
+                    }
+
+
 ---------------------------------------------------General--------------------------------------------------------------
 
     All General errors should be discuss with a team.
-    Issue 1:
+    Issue 11:
     name:           Add more description for parameters in swagger.
     description:    Need to provide more details for params in Swagger.
                     Example:
@@ -11,16 +227,7 @@
                         - Editor: no description about this entity.
 
 
-
-
-------------------------------------------GET /player/create/{editor}---------------------------------------------------
-
-    Issue 2:
-    name:           GET /player/create/{editor} use GET request instead of POST.
-    description:    Better to switch player/create to POST HTTP Request with Body instead of GET with path_params
-
-
-    Issue 3:
+    Issue 12:
     name:           CR: Need to discuss, provide and implement 1 consistent decision for failed response.
     NOTE:           Failed responses behavior is pretty chaotic. I could create 10 bugs but I think it's better here
                     create 1 change request. Here need Analytic and Backend engineers discuss and make decision
@@ -63,39 +270,7 @@
                     when behavior will be consistent then other checks will be added
 
 
-    Issue 4:
-    name:           When player created via GET /player/create/{editor} request Backend returns only "id" and "login" fields
-    description:    Perform any request which created new Player:
-                    e.g. http://3.68.165.45/player/create/supervisor?login=UdZof64264&password=sQVlX69002&screenName=djaAk69214&gender=male&role=user&age=17
-                    Backend respond with Code 200 and Body:
-                    {
-                      "id": 2024912916,
-                      "login": "UdZof64264",
-                      "password": null,
-                      "screenName": null,
-                      "gender": null,
-                      "age": null,
-                      "role": null
-                    }
-                    Endpoint POST http://3.68.165.45/player/get
-                    {
-                      "playerId": 2024912916
-                    }
-                    return all correct values
-                    {
-                      "id": 2024912916,
-                      "login": "UdZof64264",
-                      "password": "sQVlX69002",
-                      "screenName": "djaAk69214",
-                      "gender": "male",
-                      "age": 17,
-                      "role": "user"
-                    }
-
-                    Expected that all fields will be fill out with sent parameters
-
-
-    Issue 5:
+    Issue 13:
     name:           GET /player/create/{editor} gender field should pass only for options from Enum.
     description:    Now Backend pass any string value instead of validate it based on Enum options:
                     GET http://3.68.165.45/player/create/supervisor?login=UdZof64264&password=sQVlX69002&screenName=djaAk69214&gender=sjbfsbd&role=user&age=17
@@ -109,55 +284,3 @@
                       "role": "user"
                     }
                     Need to add correct field validation for this field.
-
-
-    Critical:
-    Issue 6:
-    name:           GET /player/create/{editor} Password field should be mandatory
-    description:    (Ofcourse I didn't see any reqs but when some User-type entity created Password it's an mandatory field)
-                    Now when new Player created via GET /player/create/{editor} request field Password could be skipped.
-                    Need to mark it as mandatory.
-
-
-    Critical:
-    Issue 7:
-    name:           GET /player/create/{editor} Player updated via Create endpoint.
-    description:    (Actually here I'm not sure this is a bug not a feature but behavior kind a strange)
-                    Based on Backend logic it Create new Player entity in case when request contains "login" value
-                    which is absent in db. But in case when "login" already present in db Backend update other fields
-                    instead of show some error message that user with such "login" already exist.
-
-
-
-
-
-
-------------------------------------------DELETE /player/delete/{editor}---------------------------------------------------
------------------------------------------------POST /player/get------------------------------------------------------------
-    Issue :
-    name:           POST /player/get use POST request instead of GET.
-    description:    Better to switch player/get to GET HTTP Request with path_params instead of POST with body.
----------------------------------------------GET /player/get/all-----------------------------------------------------------
-----------------------------------------PATCH /player/update/{editor}/{id}-------------------------------------------------
-
-    Issue :
-    name:           PATCH /player/update/{editor}/{id} Role field can't be updated.
-    description:    When we try to update "role" field via PATCH /player/update/{editor}/{id} we get 200 status code
-                    but field save previous value.
-                    ### Update Player
-                    PATCH http://3.68.165.45/player/update/supervisor/1937342674
-                    Content-Type: application/json
-                    Accept: */*
-                    {
-                      "role": "admin"
-                    }
-                    Response:
-                    HTTP/1.1 200
-                    {
-                      "id": 1937342674,
-                      "login": "OUfoY44626",
-                      "screenName": "yKmEE60578",
-                      "gender": "male",
-                      "age": 60,
-                      "role": "user"
-                    }

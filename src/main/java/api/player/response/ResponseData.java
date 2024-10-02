@@ -1,9 +1,12 @@
 package api.player.response;
 
+import api.player.response.models.PlayerItemResponseDTO;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.ValidatableResponse;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 public class ResponseData {
@@ -18,7 +21,8 @@ public class ResponseData {
     }
 
     public <T> List<T> asList(String jsonPath, Class<T> clazz) {
-        return response.extract().jsonPath().getList(jsonPath, clazz);
+        Type typeOfT = TypeToken.getParameterized(List.class, new Type[]{clazz}).getType();
+       return  (new Gson()).fromJson(response.extract().jsonPath().get(jsonPath).toString(), typeOfT);
     }
 
     public JsonPath asJsonPath() {

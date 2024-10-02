@@ -6,10 +6,14 @@ import com.google.gson.ToNumberPolicy;
 import com.google.gson.reflect.TypeToken;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 
 import java.util.Map;
 
 public abstract class BaseRequest {
+    @Getter
+    @Accessors(fluent = true)
     protected RequestSpecBuilder specificationBuilder;
 
     public BaseRequest() {

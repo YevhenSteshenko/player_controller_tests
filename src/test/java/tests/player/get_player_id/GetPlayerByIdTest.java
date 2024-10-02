@@ -1,17 +1,19 @@
 package tests.player.get_player_id;
 
-import _helpers.Generator;
-import api.player.request.PlayerRequest;
-import api.player.request.models.PlayerUpdateRequestDTO;
-import api.player.response.models.PlayerCreateResponseDTO;
 import api._general.models.Gender;
 import api._general.models.PlayerRole;
-import api.player.response.models.PlayerUpdateResponseDTO;
+import api.player.request.PlayerRequest;
+import api.player.response.models.PlayerCreateResponseDTO;
+import com.google.gson.Gson;
+import io.qameta.allure.Issue;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import tests.player.PlayerHelper;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class GetPlayerByIdTest {
 
@@ -33,35 +35,24 @@ public class GetPlayerByIdTest {
                 .asResponse().assertThat().body(Matchers.emptyOrNullString());
     }
 
-    @Test(description = "")
-    public void test() {
-        PlayerCreateResponseDTO newPlayerData = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
-        PlayerCreateResponseDTO createdPlayerData = new PlayerRequest()
-                .createPlayer(PlayerRole.SUPERVISOR, newPlayerData, 200)
-                .as(PlayerCreateResponseDTO.class);
+    @Issue("7")
+    @Test(description = "Try to get Player Data via invalid requests", dataProvider = "invalidData")
+    public void testGetPlayerByIdNegative(String body, int statusCode) {
+        new PlayerRequest().getPlayerByID(body, statusCode);
+    }
 
-        PlayerUpdateRequestDTO playerUpdate = new PlayerUpdateRequestDTO()
-                .login(Generator.randomString(20, "", Generator.CharType.LATIN))
-                .password(newPlayerData.password())
-                .screenName(newPlayerData.screenName())
-                .gender(newPlayerData.gender())
-                .role(newPlayerData.role())
-                .age(newPlayerData.age());
-        PlayerUpdateResponseDTO updatedPlayerData = new PlayerRequest()
-                .updatePlayer(PlayerRole.SUPERVISOR, createdPlayerData.id(), playerUpdate, 200)
-                .as(PlayerUpdateResponseDTO.class);
+    @DataProvider
+    private Object[][] invalidData() {
+        Map<String, Object> invalidParameter = new HashMap<>();
+        invalidParameter.put("1", "d");
 
-        SoftAssert softAssert = new SoftAssert();
-        softAssert.assertEquals(updatedPlayerData.id(), createdPlayerData.id(), "id: ");
-        softAssert.assertEquals(updatedPlayerData.login(), playerUpdate.login(), "login: ");
-        softAssert.assertEquals(updatedPlayerData.screenName(), playerUpdate.screenName(), "screenName: ");
-        softAssert.assertEquals(updatedPlayerData.gender(), playerUpdate.gender(), "gender: ");
-        softAssert.assertEquals(updatedPlayerData.role(), playerUpdate.role(), "role: ");
-        softAssert.assertEquals(updatedPlayerData.age(), playerUpdate.age(), "age: ");
-        softAssert.assertAll();
-
-        new PlayerRequest()
-                .getPlayerByID(createdPlayerData.id(), 200)
-                .asResponse().assertThat().body("password", Matchers.comparesEqualTo(playerUpdate.password()));
+        return new Object[][]{
+                new Object[]
+                        //NEGATIVE
+                        //Check Body validation schema
+                        {"", 400},
+                        {"{}", 400},
+                        {new Gson().toJson(invalidParameter), 400},
+        };
     }
 }

@@ -7,40 +7,59 @@ import api.player.request.PlayerRequest;
 import api.player.request.models.PlayerUpdateRequestDTO;
 import api.player.response.models.PlayerCreateResponseDTO;
 import api.player.response.models.PlayerUpdateResponseDTO;
+import com.google.gson.Gson;
+import io.qameta.allure.Issue;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import tests.player.PlayerHelper;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class UpdatePlayerTest {
-    @Test(description = "Validate Update Player Data"
-            , dataProvider = "validData")
-    public void testUpdatePlayer(PlayerUpdateRequestDTO playerUpdateData) {
+    private PlayerCreateResponseDTO createdPlayerData;
+    @BeforeMethod
+    public void beforeMethod() {
         PlayerCreateResponseDTO newPlayerData = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
-        PlayerCreateResponseDTO createdPlayerData = new PlayerRequest()
+        this.createdPlayerData = new PlayerRequest()
                 .createPlayer(PlayerRole.SUPERVISOR, newPlayerData, 200)
                 .as(PlayerCreateResponseDTO.class);
 
         //unnecessary action but now /player/create return in response not all data.
         //Could be remove after "@Issue 4" will be fixed
-        createdPlayerData = newPlayerData.id(createdPlayerData.id());
+        this.createdPlayerData = newPlayerData.id(createdPlayerData.id());
+    }
 
+    @Issue("9")
+    @Test(description = "Validate Update Player Data"
+            , dataProvider = "validData")
+    public void testUpdatePlayer(PlayerUpdateRequestDTO playerUpdateData) {
         PlayerUpdateResponseDTO updatedPlayerData = new PlayerRequest()
-                .updatePlayer(PlayerRole.SUPERVISOR, createdPlayerData.id(), playerUpdateData, 200)
+                .updatePlayer(PlayerRole.SUPERVISOR, this.createdPlayerData.id(), playerUpdateData, 200)
                 .as(PlayerUpdateResponseDTO.class);
 
-        PlayerUpdateResponseDTO expectedPlayerData = PlayerHelper.updateMapper(createdPlayerData, playerUpdateData);
+        PlayerUpdateResponseDTO expectedPlayerData = PlayerHelper.updateMapper(this.createdPlayerData, playerUpdateData);
 
         Assert.assertEquals(updatedPlayerData, expectedPlayerData, "Check if Player data has been updated: ");
         new PlayerRequest()
-                .getPlayerByID(createdPlayerData.id(), 200)
+                .getPlayerByID(this.createdPlayerData.id(), 200)
                 .asResponse().assertThat().body("password"
                         , Matchers.comparesEqualTo(playerUpdateData.password() != null
                                 ? playerUpdateData.password()
-                                : createdPlayerData.password()));
+                                : this.createdPlayerData.password()));
+    }
+
+    @Issue("10")
+    @Test(description = "Try to updated Player with incorrect data"
+            , dataProvider = "invalidData")
+    public void testUpdatePlayerWithInvalidData(PlayerRole role, String playerUpdateData, int statusCode) {
+        new PlayerRequest()
+                .updatePlayer(role, this.createdPlayerData.id(), playerUpdateData, statusCode);
     }
 
     @DataProvider
@@ -58,6 +77,27 @@ public class UpdatePlayerTest {
 
                         //Update all Player fields
                         {PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER)},
+        };
+    }
+
+    @DataProvider
+    private Object[][] invalidData() {
+        Map<String, Object> invalidParameter = new HashMap<>();
+        invalidParameter.put("1", "d");
+
+        return new Object[][]{
+                new Object[]
+                        //NEGATIVE
+                        //Try update with wrong Role
+                        {PlayerRole.ADMIN, PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER), 403},
+                        {PlayerRole.USER, PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER), 403},
+                        {PlayerRole.NONE, new Gson().toJson(PlayerHelper.generatePlayerUpdateData(Gender.MALE, PlayerRole.USER)), 404},
+
+                        //Try to update Player with wrong params
+                        {PlayerRole.SUPERVISOR, "", 400},
+                        {PlayerRole.SUPERVISOR, "{}", 400},
+                        {PlayerRole.SUPERVISOR, new Gson().toJson(invalidParameter), 400},
+
         };
     }
 }
