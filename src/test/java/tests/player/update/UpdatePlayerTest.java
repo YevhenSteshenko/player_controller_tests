@@ -1,5 +1,8 @@
 package tests.player.update;
 
+import _annotations_description.BackendEpic;
+import _annotations_description.BackendFeature;
+import _annotations_description.BackendStory;
 import _helpers.Generator;
 import api._general.models.Gender;
 import api._general.models.PlayerRole;
@@ -8,7 +11,7 @@ import api.player.request.models.PlayerUpdateRequestDTO;
 import api.player.response.models.PlayerCreateResponseDTO;
 import api.player.response.models.PlayerUpdateResponseDTO;
 import com.google.gson.Gson;
-import io.qameta.allure.Issue;
+import io.qameta.allure.*;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -21,6 +24,9 @@ import tests.player.PlayerHelper;
 import java.util.HashMap;
 import java.util.Map;
 
+@Epic(BackendEpic.API)
+@Feature(BackendFeature.PLAYER)
+@Stories(@Story(BackendStory.UPDATE))
 public class UpdatePlayerTest {
     private PlayerCreateResponseDTO createdPlayerData;
     @BeforeMethod

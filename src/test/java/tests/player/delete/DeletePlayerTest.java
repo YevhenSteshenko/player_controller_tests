@@ -1,12 +1,15 @@
 package tests.player.delete;
 
+import _annotations_description.BackendEpic;
+import _annotations_description.BackendFeature;
+import _annotations_description.BackendStory;
 import api._general.models.Gender;
 import api._general.models.PlayerRole;
 import api.player.request.PlayerRequest;
 import api.player.response.models.PlayerCreateResponseDTO;
 import api.player.response.models.PlayerGetAllResponseDTO;
 import com.google.gson.Gson;
-import io.qameta.allure.Issue;
+import io.qameta.allure.*;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -18,6 +21,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Epic(BackendEpic.API)
+@Feature(BackendFeature.PLAYER)
+@Stories(@Story(BackendStory.DELETE))
 public class DeletePlayerTest {
     private PlayerCreateResponseDTO createdPlayerData;
 

@@ -30,6 +30,8 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.testng/testng
     testImplementation("org.testng:testng:7.10.2")
+    // https://mvnrepository.com/artifact/io.qameta.allure/allure-rest-assured
+    implementation("io.qameta.allure:allure-rest-assured:2.29.0")
 
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     api("org.projectlombok:lombok:1.18.34")

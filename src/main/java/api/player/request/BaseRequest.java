@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.ToNumberPolicy;
 import com.google.gson.reflect.TypeToken;
+import io.qameta.allure.restassured.AllureRestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.http.ContentType;
 import lombok.Getter;
@@ -20,7 +21,9 @@ public abstract class BaseRequest {
         this.specificationBuilder = new RequestSpecBuilder()
                 .setBaseUri("http://3.68.165.45") //todo: switch to get from property
                 .setContentType(ContentType.JSON)
-                .setAccept(ContentType.ANY);
+                .setAccept(ContentType.ANY)
+                .addFilter(new AllureRestAssured())
+        ;
     }
 
     public RequestSpecBuilder addParams(RequestSpecBuilder specificationBuilder, Object object) {

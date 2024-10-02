@@ -1,16 +1,21 @@
 package tests.player.create;
 
+import _annotations_description.BackendEpic;
+import _annotations_description.BackendFeature;
+import _annotations_description.BackendStory;
 import api.player.request.PlayerRequest;
 import api.player.response.models.PlayerCreateResponseDTO;
 import api._general.models.Gender;
 import api._general.models.PlayerRole;
-import io.qameta.allure.Issue;
-import io.qameta.allure.Issues;
+import io.qameta.allure.*;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 import tests.player.PlayerHelper;
 
+@Epic(BackendEpic.API)
+@Feature(BackendFeature.PLAYER)
+@Stories(@Story(BackendStory.CREATE))
 public class CreatePlayerTest {
 
     @Issue("2")

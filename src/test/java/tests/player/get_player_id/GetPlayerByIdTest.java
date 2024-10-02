@@ -1,11 +1,14 @@
 package tests.player.get_player_id;
 
+import _annotations_description.BackendEpic;
+import _annotations_description.BackendFeature;
+import _annotations_description.BackendStory;
 import api._general.models.Gender;
 import api._general.models.PlayerRole;
 import api.player.request.PlayerRequest;
 import api.player.response.models.PlayerCreateResponseDTO;
 import com.google.gson.Gson;
-import io.qameta.allure.Issue;
+import io.qameta.allure.*;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
@@ -15,6 +18,9 @@ import tests.player.PlayerHelper;
 import java.util.HashMap;
 import java.util.Map;
 
+@Epic(BackendEpic.API)
+@Feature(BackendFeature.PLAYER)
+@Stories(@Story(BackendStory.GET_PLAYER))
 public class GetPlayerByIdTest {
 
     @Test(description = "POST /player/get returns correct data for present user and deleted")

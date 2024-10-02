@@ -1,11 +1,14 @@
 package tests.player.get_all_players;
 
+import _annotations_description.BackendEpic;
+import _annotations_description.BackendFeature;
+import _annotations_description.BackendStory;
 import api._general.models.Gender;
 import api._general.models.PlayerRole;
 import api.player.request.PlayerRequest;
 import api.player.response.models.PlayerCreateResponseDTO;
 import api.player.response.models.PlayerGetAllResponseDTO;
-import io.qameta.allure.Issue;
+import io.qameta.allure.*;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
@@ -14,6 +17,9 @@ import tests.player.PlayerHelper;
 import java.util.ArrayList;
 import java.util.List;
 
+@Epic(BackendEpic.API)
+@Feature(BackendFeature.PLAYER)
+@Stories(@Story(BackendStory.GET_ALL_PLAYERS))
 public class GetAllPlayersTest {
     private final List<PlayerCreateResponseDTO> players = new ArrayList<>();
     @BeforeClass
