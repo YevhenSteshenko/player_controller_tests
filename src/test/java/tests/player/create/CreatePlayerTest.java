@@ -3,10 +3,10 @@ package tests.player.create;
 import _annotations_description.BackendEpic;
 import _annotations_description.BackendFeature;
 import _annotations_description.BackendStory;
-import api.player.request.PlayerRequest;
-import api.player.response.models.PlayerCreateResponseDTO;
 import api._general.models.Gender;
 import api._general.models.PlayerRole;
+import api.player.request.PlayerRequest;
+import api.player.response.models.PlayerCreateResponseDTO;
 import io.qameta.allure.*;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -19,7 +19,8 @@ import tests.player.PlayerHelper;
 public class CreatePlayerTest {
 
     @Issue("2")
-    @Test(description = "Create player"
+    @Test(groups = {"all", "parallel"}
+            , description = "Create player"
             , dataProvider = "validData")
     public void testCreatePlayer(PlayerRole editor, PlayerCreateResponseDTO player) {
         PlayerCreateResponseDTO actualResult = new PlayerRequest()
@@ -38,7 +39,9 @@ public class CreatePlayerTest {
     }
 
     @Issue("4")
-    @Test(description = "Try to create existed Player")
+    @Test(groups = {"all", "parallel"}
+            , description = "Try to create existed Player"
+    )
     public void testCreateExistPlayer() {
         PlayerCreateResponseDTO player = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
         new PlayerRequest().createPlayer(PlayerRole.SUPERVISOR, player, 200);
@@ -47,7 +50,8 @@ public class CreatePlayerTest {
     }
 
     @Issue("3")
-    @Test(description = "Create player(negative scenarios)"
+    @Test(groups = {"all", "parallel"}
+            , description = "Create player(negative scenarios)"
             , dataProvider = "invalidData")
     public void testCreatePlayerWithInvalidData(PlayerRole editor, PlayerCreateResponseDTO player, int statusCode, String description) {
         new PlayerRequest()

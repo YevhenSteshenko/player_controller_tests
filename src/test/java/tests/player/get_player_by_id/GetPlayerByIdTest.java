@@ -23,7 +23,8 @@ import java.util.Map;
 @Stories(@Story(BackendStory.GET_PLAYER))
 public class GetPlayerByIdTest {
 
-    @Test(description = "POST /player/get returns correct data for present user and deleted")
+    @Test(groups = {"all", "parallel"}
+            , description = "POST /player/get returns correct data for present user and deleted")
     public void testGetPlayerById() {
         PlayerCreateResponseDTO newPlayerData = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
         PlayerCreateResponseDTO createPlayerData = new PlayerRequest()
@@ -42,7 +43,9 @@ public class GetPlayerByIdTest {
     }
 
     @Issue("7")
-    @Test(description = "Try to get Player Data via invalid requests", dataProvider = "invalidData")
+    @Test(groups = {"all", "parallel"}
+            , description = "Try to get Player Data via invalid requests"
+            , dataProvider = "invalidData")
     public void testGetPlayerByIdNegative(String body, int statusCode, String message) {
         new PlayerRequest().getPlayerByID(body, statusCode);
     }

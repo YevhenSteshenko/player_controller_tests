@@ -1,5 +1,6 @@
 package api.player.request;
 
+import api.BaseRequest;
 import api._general.models.PlayerRole;
 import api.player.request.models.PlayerUpdateRequestDTO;
 import api.player.response.ResponseData;

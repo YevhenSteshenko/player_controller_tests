@@ -34,7 +34,8 @@ public class GetAllPlayersTest {
     }
 
     @Issue(value = "8")
-    @Test(description = "Validate Get All Players data")
+    @Test(groups = {"all", "parallel"}
+            , description = "Validate Get All Players data")
     public void testGetAllPlayers() {
         List<PlayerGetAllResponseDTO> allPlayers = new PlayerRequest().getAllPlayers(200)
                 .asList("players", PlayerGetAllResponseDTO.class);

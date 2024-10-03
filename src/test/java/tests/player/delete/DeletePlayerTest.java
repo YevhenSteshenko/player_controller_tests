@@ -35,7 +35,8 @@ public class DeletePlayerTest {
                 .as(PlayerCreateResponseDTO.class);
     }
 
-    @Test(description = "Delete Player"
+    @Test(groups = {"all", "parallel"}
+            , description = "Delete Player"
             )
     public void testDeletePlayer() {
         new PlayerRequest().deletePlayer(PlayerRole.SUPERVISOR, this.createdPlayerData.id(), 204);
@@ -52,14 +53,16 @@ public class DeletePlayerTest {
     }
 
     @Issue(value = "5")
-    @Test(description = "Try to Delete Player with wrong Editor"
+    @Test(groups = {"all", "parallel"}
+            , description = "Try to Delete Player with wrong Editor"
             , dataProvider = "wrongEditorsForDeleteUserOperation"
     )
     public void testDeletePlayerWithWrongEditor(PlayerRole role, int statusCode) {
         new PlayerRequest().deletePlayer(role, this.createdPlayerData.id(), statusCode);
     }
 
-    @Test(description = "Try to Delete Player with wrong body params"
+    @Test(groups = {"all", "parallel"}
+            , description = "Try to Delete Player with wrong body params"
             , dataProvider = "wrongBodyForDeleteUserOperation"
     )
     public void testDeletePlayerWithWrongBodyParams(PlayerRole role, String body, int statusCode, String message) {

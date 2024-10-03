@@ -14,11 +14,9 @@ import com.google.gson.Gson;
 import io.qameta.allure.*;
 import org.hamcrest.Matchers;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.testng.asserts.SoftAssert;
 import tests.player.PlayerHelper;
 
 import java.util.HashMap;
@@ -42,7 +40,8 @@ public class UpdatePlayerTest {
     }
 
     @Issue("9")
-    @Test(description = "Validate Update Player Data"
+    @Test(groups = {"all", "parallel"}
+            , description = "Validate Update Player Data"
             , dataProvider = "validData")
     public void testUpdatePlayer(PlayerUpdateRequestDTO playerUpdateData) {
         PlayerUpdateResponseDTO updatedPlayerData = new PlayerRequest()
@@ -61,7 +60,8 @@ public class UpdatePlayerTest {
     }
 
     @Issue("10")
-    @Test(description = "Try to updated Player with incorrect data"
+    @Test(groups = {"all", "parallel"}
+            , description = "Try to updated Player with incorrect data"
             , dataProvider = "invalidData")
     public void testUpdatePlayerWithInvalidData(PlayerRole role, String playerUpdateData, int statusCode, String message) {
         new PlayerRequest()

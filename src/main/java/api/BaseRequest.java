@@ -1,5 +1,6 @@
-package api.player.request;
+package api;
 
+import _common.utils.config.Default;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.ToNumberPolicy;
@@ -19,7 +20,7 @@ public abstract class BaseRequest {
 
     public BaseRequest() {
         this.specificationBuilder = new RequestSpecBuilder()
-                .setBaseUri("http://3.68.165.45") //todo: switch to get from property
+                .setBaseUri(Default.URI.getString())
                 .setContentType(ContentType.JSON)
                 .setAccept(ContentType.ANY)
                 .addFilter(new AllureRestAssured())
