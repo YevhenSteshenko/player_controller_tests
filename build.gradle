@@ -34,10 +34,26 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
 }
 
-tasks.test {
-    useTestNG()
-    systemProperty "env", "prod"
-    systemProperty "api_version", "v1"
+def configFile = file('src/test/resources/default.properties')
+if (configFile.exists()) {
+    def properties = new Properties()
+    configFile.withInputStream { stream -> properties.load(stream) }
+
+    tasks.withType(Test).configureEach {
+        useTestNG()
+//        useTestNG() {
+//            suites 'src/test/resources/api.suite.xml'
+//            parallel = System.getProperty('parallel')
+//            threadCount = 3
+//        }
+
+        properties.each { key, value ->
+            def commandLineValue = System.getProperty(key)
+            systemProperty key, commandLineValue ?: value
+        }
+    }
+} else {
+    throw new GradleException("Config file not found: $configFile")
 }
 
 java {
