@@ -10,13 +10,16 @@ import java.util.Properties;
 
 public class ConfigLoader {
     private static final String ENVIRONMENT;
+    private static final String API_VERSION;
     private static final Properties properties = new Properties();
 
     static {
-        ENVIRONMENT = System.getProperty("env");
+        ENVIRONMENT = System.getProperty("env").toLowerCase();
+        API_VERSION = System.getProperty("api_version").toLowerCase();
 
         System.out.println("Loading system properties");
         load("default.properties");
+        load(ENVIRONMENT + "." + API_VERSION + ".properties");
     }
 
     private static void load(final String name) {

@@ -2,12 +2,19 @@ package _common.utils.config;
 
 import lombok.NonNull;
 
-public enum Default {
-    THREAD_COUNT("thread.count");
+public enum Environment {
+    URI("base.uri"),
+
+    //Endpoints
+    PLAYER_GET("player.get"),
+    PLAYER_GET_ALL("player.get.all"),
+    PLAYER_CREATE("player.create"),
+    PLAYER_UPDATE("player.update"),
+    PLAYER_DELETE("player.delete");
 
     private final String key;
 
-    Default(@NonNull final String key) {
+    Environment(@NonNull final String key) {
         this.key = key;
     }
 

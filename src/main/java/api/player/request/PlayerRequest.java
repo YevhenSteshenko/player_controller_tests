@@ -1,5 +1,6 @@
 package api.player.request;
 
+import _common.utils.config.Environment;
 import api.BaseRequest;
 import api._general.models.PlayerRole;
 import api.player.request.models.PlayerUpdateRequestDTO;
@@ -21,7 +22,7 @@ public class PlayerRequest extends BaseRequest {
 
         RequestSpecification specification =
                 super.specificationBuilder
-                        .setBasePath("/player/get")
+                        .setBasePath(Environment.PLAYER_GET.getString())
                         .build();
 
         return this.post(specification, new Gson().toJson(body), statusCode);
@@ -31,7 +32,7 @@ public class PlayerRequest extends BaseRequest {
     public ResponseData getPlayerByID(String body, int statusCode) {
         RequestSpecification specification =
                 super.specificationBuilder
-                        .setBasePath("/player/get")
+                        .setBasePath(Environment.PLAYER_GET.getString())
                         .build();
 
         return this.post(specification, body, statusCode);
@@ -41,7 +42,7 @@ public class PlayerRequest extends BaseRequest {
     public ResponseData getAllPlayers(int statusCode) {
         RequestSpecification specification =
                 super.specificationBuilder
-                        .setBasePath("/player/get/all")
+                        .setBasePath(Environment.PLAYER_GET_ALL.getString())
                         .build();
 
         return this.get(specification, statusCode);
@@ -53,7 +54,7 @@ public class PlayerRequest extends BaseRequest {
 
         RequestSpecification specification =
                 super.specificationBuilder
-                        .setBasePath("/player/create/" + (editor.equals(PlayerRole.NONE) ? "" : editor.name().toLowerCase()))
+                        .setBasePath(Environment.PLAYER_CREATE.getString() + (editor.equals(PlayerRole.NONE) ? "" : ( "/" + editor.name().toLowerCase())))
                         .build();
 
         return this.get(specification, statusCode);
@@ -63,7 +64,7 @@ public class PlayerRequest extends BaseRequest {
     public ResponseData updatePlayer(PlayerRole editor, Integer playerID, PlayerUpdateRequestDTO body, int statusCode) {
         RequestSpecification specification =
                 super.specificationBuilder
-                        .setBasePath("/player/update" + (editor.equals(PlayerRole.NONE) ? "" : ( "/" + editor.name().toLowerCase())) + "/" + playerID)
+                        .setBasePath(Environment.PLAYER_UPDATE.getString() + (editor.equals(PlayerRole.NONE) ? "" : ( "/" + editor.name().toLowerCase())) + "/" + playerID)
                         .build();
 
         return this.patch(specification, new Gson().toJson(body), statusCode);
@@ -73,7 +74,7 @@ public class PlayerRequest extends BaseRequest {
     public ResponseData updatePlayer(PlayerRole editor, Integer playerID, String body, int statusCode) {
         RequestSpecification specification =
                 super.specificationBuilder
-                        .setBasePath("/player/update" + (editor.equals(PlayerRole.NONE) ? "" : ( "/" + editor.name().toLowerCase())) + "/" + playerID)
+                        .setBasePath(Environment.PLAYER_UPDATE.getString() + (editor.equals(PlayerRole.NONE) ? "" : ( "/" + editor.name().toLowerCase())) + "/" + playerID)
                         .build();
 
         return this.patch(specification, body, statusCode);
@@ -86,7 +87,7 @@ public class PlayerRequest extends BaseRequest {
 
         RequestSpecification specification =
                 super.specificationBuilder
-                        .setBasePath("/player/delete/" + (editor.equals(PlayerRole.NONE) ? "" : editor.name().toLowerCase()))
+                        .setBasePath(Environment.PLAYER_DELETE.getString() + (editor.equals(PlayerRole.NONE) ? "" : ("/" + editor.name().toLowerCase())))
                         .build();
 
         return this.delete(specification, new Gson().toJson(body), statusCode);
@@ -96,7 +97,7 @@ public class PlayerRequest extends BaseRequest {
     public ResponseData deletePlayer(PlayerRole editor, String body, int statusCode) {
         RequestSpecification specification =
                 super.specificationBuilder
-                        .setBasePath("/player/delete/" + (editor.equals(PlayerRole.NONE) ? "" : editor.name().toLowerCase()))
+                        .setBasePath(Environment.PLAYER_DELETE.getString() + (editor.equals(PlayerRole.NONE) ? "" : ("/" + editor.name().toLowerCase())))
                         .build();
 
         return this.delete(specification, body, statusCode);
