@@ -41,11 +41,12 @@ if (configFile.exists()) {
 
     tasks.withType(Test).configureEach {
         useTestNG()
-//        useTestNG() {
+        useTestNG() {
 //            suites 'src/test/resources/api.suite.xml'
-//            parallel = System.getProperty('parallel')
-//            threadCount = 3
-//        }
+            suites  System.getProperty('suite')
+            parallel = System.getProperty('parallel')
+            threadCount = 3
+        }
 
         properties.each { key, value ->
             def commandLineValue = System.getProperty(key)
