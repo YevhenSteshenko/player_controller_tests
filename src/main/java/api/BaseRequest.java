@@ -1,6 +1,5 @@
 package api;
 
-import _common.utils.config.Default;
 import _common.utils.config.Environment;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,8 +13,8 @@ import lombok.experimental.Accessors;
 
 import java.util.Map;
 
+@Getter
 public abstract class BaseRequest {
-    @Getter
     @Accessors(fluent = true)
     protected RequestSpecBuilder specificationBuilder;
 

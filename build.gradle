@@ -22,6 +22,10 @@ dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
     // https://mvnrepository.com/artifact/io.qameta.allure/allure-testng
     implementation 'io.qameta.allure:allure-testng:2.29.0'
+    // https://mvnrepository.com/artifact/org.awaitility/awaitility
+    implementation group: 'org.awaitility', name: 'awaitility', version: '4.2.0'
+    // https://mvnrepository.com/artifact/io.qameta.allure/allure-awaitility
+    implementation group: 'io.qameta.allure', name: 'allure-awaitility', version: '2.21.0'
 
     // https://mvnrepository.com/artifact/org.testng/testng
     testImplementation 'org.testng:testng:7.10.2'
@@ -40,11 +44,11 @@ if (configFile.exists()) {
     configFile.withInputStream { stream -> properties.load(stream) }
 
     tasks.withType(Test).configureEach {
-        useTestNG()
+//        useTestNG()
         useTestNG() {
-//            suites 'src/test/resources/api.suite.xml'
-            suites  System.getProperty('suite')
-            parallel = System.getProperty('parallel')
+            suites  'src/test/resources/api.suite.xml'
+            parallel = 'classes' // Options: "methods", "tests", "classes", or "instances"
+//            parallel = System.getProperty('parallel')
             threadCount = 3
         }
 

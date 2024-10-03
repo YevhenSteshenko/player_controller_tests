@@ -2,7 +2,7 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 
 <suite name="API">
-    <test name="API Test" parallel="classes" thread-count="3">
+    <test name="API Test">
         <groups>
             <run>
                 <include name="all"/>

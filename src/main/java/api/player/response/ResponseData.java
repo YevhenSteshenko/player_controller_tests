@@ -1,6 +1,5 @@
 package api.player.response;
 
-import api.player.response.models.PlayerItemResponseDTO;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.restassured.path.json.JsonPath;

@@ -22,7 +22,7 @@ import java.util.List;
 @Stories(@Story(BackendStory.GET_ALL_PLAYERS))
 public class GetAllPlayersTest {
     private final List<PlayerCreateResponseDTO> players = new ArrayList<>();
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void beforeClass() {
         while (this.players.size() < 3) {
             PlayerCreateResponseDTO playerData = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);

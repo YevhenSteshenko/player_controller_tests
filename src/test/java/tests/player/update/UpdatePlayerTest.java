@@ -27,7 +27,7 @@ import java.util.Map;
 @Stories(@Story(BackendStory.UPDATE))
 public class UpdatePlayerTest {
     private PlayerCreateResponseDTO createdPlayerData;
-    @BeforeMethod
+    @BeforeMethod(alwaysRun = true)
     public void beforeMethod() {
         PlayerCreateResponseDTO newPlayerData = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
         this.createdPlayerData = new PlayerRequest()
