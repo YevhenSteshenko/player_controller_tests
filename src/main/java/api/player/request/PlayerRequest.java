@@ -103,7 +103,7 @@ public class PlayerRequest extends BaseRequest {
         return this.delete(specification, body, statusCode);
     }
 
-    @Step("Perform GET request with Spec: {specification}. Expected Response Code: {statusCode}")
+    @Step("Perform GET request with Expected Response Code: {statusCode}")
     private ResponseData get(RequestSpecification specification, int statusCode) {
         return new ResponseData(RestAssured
                 .given()
@@ -116,7 +116,7 @@ public class PlayerRequest extends BaseRequest {
                     .statusCode(statusCode));
     }
 
-    @Step("Perform POST request with Spec: {specification}. Body: {body} Expected Response Code: {statusCode}")
+    @Step("Perform POST request with Body: {body} Expected Response Code: {statusCode}")
     private ResponseData post(RequestSpecification specification, String body, int statusCode) {
         return new ResponseData(RestAssured
                 .given()
@@ -130,7 +130,7 @@ public class PlayerRequest extends BaseRequest {
                     .statusCode(statusCode));
     }
 
-    @Step("Perform PATCH request with Spec: {specification}. Body: {body} Expected Response Code: {statusCode}")
+    @Step("Perform PATCH request with Body: {body} Expected Response Code: {statusCode}")
     private ResponseData patch(RequestSpecification specification, String body, int statusCode) {
         return new ResponseData(RestAssured
                 .given()
@@ -144,7 +144,7 @@ public class PlayerRequest extends BaseRequest {
                     .statusCode(statusCode));
     }
 
-    @Step("Perform DELETE request with Spec: {specification}. Body: {body} Expected Response Code: {statusCode}")
+    @Step("Perform DELETE request with Body: {body} Expected Response Code: {statusCode}")
     private ResponseData delete(RequestSpecification specification, String body, int statusCode) {
         return new ResponseData(RestAssured
                 .given()

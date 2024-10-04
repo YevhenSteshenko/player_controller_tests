@@ -19,11 +19,15 @@ public abstract class BaseRequest {
     protected RequestSpecBuilder specificationBuilder;
 
     public BaseRequest() {
+        AllureRestAssured allureFilter = new AllureRestAssured()
+                .setRequestTemplate("http-request.ftl")
+                .setResponseTemplate("http-response.ftl")
+                ;
         this.specificationBuilder = new RequestSpecBuilder()
                 .setBaseUri(Environment.URI.getString())
                 .setContentType(ContentType.JSON)
                 .setAccept(ContentType.ANY)
-                .addFilter(new AllureRestAssured())
+                .addFilter(allureFilter)
         ;
     }
 
