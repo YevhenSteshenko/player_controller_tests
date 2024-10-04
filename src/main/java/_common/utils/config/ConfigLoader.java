@@ -18,7 +18,6 @@ public class ConfigLoader {
         API_VERSION = System.getProperty("api_version").toLowerCase();
 
         System.out.println("Loading system properties");
-        load("default.properties");
         load(ENVIRONMENT + "." + API_VERSION + ".properties");
     }
 
