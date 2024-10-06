@@ -3,9 +3,9 @@ package api.player.request;
 import _common.utils.config.Environment;
 import api.BaseRequest;
 import api._general.models.PlayerRole;
+import api.player.request.models.PlayerCreateRequestDTO;
 import api.player.request.models.PlayerUpdateRequestDTO;
 import api.player.response.ResponseData;
-import api.player.response.models.PlayerCreateResponseDTO;
 import com.google.gson.Gson;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
@@ -49,7 +49,7 @@ public class PlayerRequest extends BaseRequest {
     }
 
     @Step("Create Player Request with editor: {editor} and query_params: {params}")
-    public ResponseData createPlayer(PlayerRole editor, PlayerCreateResponseDTO params, int statusCode) {
+    public ResponseData createPlayer(PlayerRole editor, PlayerCreateRequestDTO params, int statusCode) {
         addParams(super.specificationBuilder, params);
 
         RequestSpecification specification =

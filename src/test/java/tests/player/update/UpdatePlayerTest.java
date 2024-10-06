@@ -7,6 +7,7 @@ import _helpers.Generator;
 import api._general.models.Gender;
 import api._general.models.PlayerRole;
 import api.player.request.PlayerRequest;
+import api.player.request.models.PlayerCreateRequestDTO;
 import api.player.request.models.PlayerUpdateRequestDTO;
 import api.player.response.models.PlayerCreateResponseDTO;
 import api.player.response.models.PlayerUpdateResponseDTO;
@@ -17,6 +18,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import tests.BaseTest;
 import tests.player.PlayerHelper;
 
 import java.util.HashMap;
@@ -25,23 +27,29 @@ import java.util.Map;
 @Epic(BackendEpic.API)
 @Feature(BackendFeature.PLAYER)
 @Stories(@Story(BackendStory.UPDATE))
-public class UpdatePlayerTest {
+public class UpdatePlayerTest extends BaseTest {
     private PlayerCreateResponseDTO createdPlayerData;
     @BeforeMethod(alwaysRun = true)
     public void beforeMethod() {
-        PlayerCreateResponseDTO newPlayerData = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
+        PlayerCreateRequestDTO newPlayerData = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
         this.createdPlayerData = new PlayerRequest()
                 .createPlayer(PlayerRole.SUPERVISOR, newPlayerData, 200)
                 .as(PlayerCreateResponseDTO.class);
 
         //unnecessary action but now /player/create return in response not all data.
         //Could be remove after "@Issue 4" will be fixed
-        this.createdPlayerData = newPlayerData.id(createdPlayerData.id());
+        createdPlayerData
+                .login(newPlayerData.login())
+                .password(newPlayerData.password())
+                .screenName(newPlayerData.screenName())
+                .age(newPlayerData.age())
+                .role(newPlayerData.role())
+                .gender(newPlayerData.gender());
     }
 
     @Issue("9")
-    @Test(groups = {"all", "parallel"}
-            , description = "Validate Update Player Data"
+    @Test(description = "Validate Update Player Data"
+            , groups = {"all", "update_player"}
             , dataProvider = "validData")
     public void testUpdatePlayer(PlayerUpdateRequestDTO playerUpdateData) {
         PlayerUpdateResponseDTO updatedPlayerData = new PlayerRequest()
@@ -60,8 +68,8 @@ public class UpdatePlayerTest {
     }
 
     @Issue("10")
-    @Test(groups = {"all", "parallel"}
-            , description = "Try to updated Player with incorrect data"
+    @Test(description = "Try to updated Player with incorrect data"
+            , groups = {"all", "update_player"}
             , dataProvider = "invalidData")
     public void testUpdatePlayerWithInvalidData(PlayerRole role, String playerUpdateData, int statusCode, String message) {
         new PlayerRequest()

@@ -27,6 +27,9 @@ dependencies {
     testImplementation 'org.testng:testng:7.10.2'
     // https://mvnrepository.com/artifact/io.qameta.allure/allure-rest-assured
     implementation 'io.qameta.allure:allure-rest-assured:2.29.0'
+    // https://mvnrepository.com/artifact/com.github.automatedowl/allure-environment-writer
+    implementation group: 'com.github.automatedowl', name: 'allure-environment-writer', version: '1.0.0'
+
 
     // https://mvnrepository.com/artifact/org.projectlombok/lombok
     implementation 'org.projectlombok:lombok:1.18.34'
@@ -41,27 +44,41 @@ configFile.withInputStream { stream -> properties.load(stream) }
 
 tasks.withType(Test) {
     useTestNG() {
+        //ENV CONFIG:
+        //Commandline -> default.properties env -> Default value
+        def commandLineEnv = System.getProperty('env')
+        // Default value 'rel' if not provided in properties file
+        def defaultPropertiesFileEnv = properties.getProperty('env', 'rel')
+        def env = commandLineEnv
+                ? commandLineEnv
+                : defaultPropertiesFileEnv
+        systemProperty 'env', env
+        println("ENVIRONMENT NAME: " + env)
 
-        //PARALLEL CONFIG:
-        //Commandline -> default.properties threadCount -> Default value
-        def commandLineSuites = System.getProperty('suites')
-        // Default value 'src/test/resources/api.suite.xml' if not provided in properties file
-        def defaultPropertiesFileSuites = properties.getProperty('suites', 'src/test/resources/api.suite.xml')
-        suites commandLineSuites
-                ? commandLineSuites
-                : defaultPropertiesFileSuites
+        //API VERSION CONFIG:
+        //Commandline -> default.properties api_version -> Default value
+        def commandLineApiVersion = System.getProperty('api_version')
+        // Default value 'v1' if not provided in properties file
+        def defaultPropertiesFileApiVersion = properties.getProperty('api_version', 'v1')
+        def api_version = commandLineApiVersion
+                ? commandLineApiVersion
+                : defaultPropertiesFileApiVersion
+        systemProperty 'api_version', api_version
+        println("API VERSION: " + api_version)
 
         //THREADS CONFIG:
-        //Commandline -> default.properties threadCount -> Default value
-        def commandLineThreadCount = System.getProperty('thread')
+        //Commandline -> default.properties thread -> Default value
+        def commandLineThread = System.getProperty('thread')
         // Default to 4 if not provided in properties file
-        def defaultPropertiesFileThreadCount = properties.getProperty('threadCount', '4')
-        threadCount = commandLineThreadCount
-                ? Integer.parseInt(commandLineThreadCount)
-                : Integer.parseInt(defaultPropertiesFileThreadCount)
+        def defaultPropertiesFileThread = properties.getProperty('thread', '4')
+        threadCount = commandLineThread
+                ? Integer.parseInt(commandLineThread)
+                : Integer.parseInt(defaultPropertiesFileThread)
+        systemProperty 'thread', threadCount
+        println("NUMBER OF THREADS: " + threadCount)
 
         //PARALLEL CONFIG:
-        //Commandline -> default.properties threadCount -> Default value
+        //Commandline -> default.properties parallel -> Default value
         //Options: "methods", "tests", "classes", or "instances"
         def commandLineParallel = System.getProperty('parallel')
         // Default value 'classes' if not provided in properties file
@@ -69,12 +86,22 @@ tasks.withType(Test) {
         parallel = commandLineParallel
                 ? commandLineParallel
                 : defaultPropertiesFileParallel
-    }
+        systemProperty 'parallel', parallel
+        println("ENTITY PARALLEL IN: " + parallel)
 
-    properties.each { key, value ->
-        systemProperty key, value
+        //SUITES CONFIG:
+        //Commandline -> default.properties suites -> Default value
+        def commandLineSuites = System.getProperty('suites')
+        // Default value 'src/test/resources/api.player.suite.xml' if not provided in properties file
+        def defaultPropertiesFileSuites = properties.getProperty('suites', 'src/test/resources/test_suites/api.player.suite.xml')
+        suites commandLineSuites
+                ? commandLineSuites.split(" ")
+                : defaultPropertiesFileSuites.split(" ")
+        println("SUITES: " + commandLineSuites ? commandLineSuites : defaultPropertiesFileSuites)
+        systemProperty 'suites', commandLineSuites ? commandLineSuites : defaultPropertiesFileSuites
     }
 }
+
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11

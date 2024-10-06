@@ -6,12 +6,14 @@ import _annotations_description.BackendStory;
 import api._general.models.Gender;
 import api._general.models.PlayerRole;
 import api.player.request.PlayerRequest;
+import api.player.request.models.PlayerCreateRequestDTO;
 import api.player.response.models.PlayerCreateResponseDTO;
 import api.player.response.models.PlayerGetAllResponseDTO;
 import io.qameta.allure.*;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import tests.BaseTest;
 import tests.player.PlayerHelper;
 
 import java.util.ArrayList;
@@ -20,22 +22,30 @@ import java.util.List;
 @Epic(BackendEpic.API)
 @Feature(BackendFeature.PLAYER)
 @Stories(@Story(BackendStory.GET_ALL_PLAYERS))
-public class GetAllPlayersTest {
+public class GetAllPlayersTest extends BaseTest {
     private final List<PlayerCreateResponseDTO> players = new ArrayList<>();
     @BeforeClass(alwaysRun = true)
     public void beforeClass() {
         while (this.players.size() < 3) {
-            PlayerCreateResponseDTO playerData = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
+            PlayerCreateRequestDTO playerData = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
             PlayerCreateResponseDTO createdPlayer = new PlayerRequest()
                     .createPlayer(PlayerRole.SUPERVISOR, playerData, 200)
                     .as(PlayerCreateResponseDTO.class);
-            this.players.add(playerData.id(createdPlayer.id()));
+
+            this.players.add(createdPlayer
+                    .login(playerData.login())
+                    .password(playerData.password())
+                    .screenName(playerData.screenName())
+                    .age(playerData.age())
+                    .role(playerData.role())
+                    .gender(playerData.gender()));
         }
     }
 
     @Issue(value = "8")
-    @Test(groups = {"all", "parallel"}
-            , description = "Validate Get All Players data")
+    @Test(description = "Validate Get All Players data"
+            , groups = {"all", "get_all_players"}
+    )
     public void testGetAllPlayers() {
         List<PlayerGetAllResponseDTO> allPlayers = new PlayerRequest().getAllPlayers(200)
                 .asList("players", PlayerGetAllResponseDTO.class);

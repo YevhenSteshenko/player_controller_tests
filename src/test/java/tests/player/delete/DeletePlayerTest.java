@@ -6,6 +6,7 @@ import _annotations_description.BackendStory;
 import api._general.models.Gender;
 import api._general.models.PlayerRole;
 import api.player.request.PlayerRequest;
+import api.player.request.models.PlayerCreateRequestDTO;
 import api.player.response.models.PlayerCreateResponseDTO;
 import api.player.response.models.PlayerGetAllResponseDTO;
 import com.google.gson.Gson;
@@ -15,6 +16,7 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import tests.BaseTest;
 import tests.player.PlayerHelper;
 
 import java.util.HashMap;
@@ -24,20 +26,20 @@ import java.util.Map;
 @Epic(BackendEpic.API)
 @Feature(BackendFeature.PLAYER)
 @Stories(@Story(BackendStory.DELETE))
-public class DeletePlayerTest {
+public class DeletePlayerTest extends BaseTest {
     private PlayerCreateResponseDTO createdPlayerData;
 
     @BeforeMethod(alwaysRun = true)
     public void beforeMethod() {
-        PlayerCreateResponseDTO newPlayerData = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
+        PlayerCreateRequestDTO newPlayerData = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
         this.createdPlayerData = new PlayerRequest()
                 .createPlayer(PlayerRole.SUPERVISOR, newPlayerData, 200)
                 .as(PlayerCreateResponseDTO.class);
     }
 
-    @Test(groups = {"all", "parallel"}
-            , description = "Delete Player"
-            )
+    @Test(description = "Delete Player"
+            , groups = {"all", "delete_player"}
+    )
     public void testDeletePlayer() {
         new PlayerRequest().deletePlayer(PlayerRole.SUPERVISOR, this.createdPlayerData.id(), 204);
         new PlayerRequest()
@@ -53,16 +55,16 @@ public class DeletePlayerTest {
     }
 
     @Issue(value = "5")
-    @Test(groups = {"all", "parallel"}
-            , description = "Try to Delete Player with wrong Editor"
+    @Test(description = "Try to Delete Player with wrong Editor"
+            , groups = {"all", "delete_player"}
             , dataProvider = "wrongEditorsForDeleteUserOperation"
     )
     public void testDeletePlayerWithWrongEditor(PlayerRole role, int statusCode) {
         new PlayerRequest().deletePlayer(role, this.createdPlayerData.id(), statusCode);
     }
 
-    @Test(groups = {"all", "parallel"}
-            , description = "Try to Delete Player with wrong body params"
+    @Test(description = "Try to Delete Player with wrong body params"
+            , groups = {"all", "delete_player"}
             , dataProvider = "wrongBodyForDeleteUserOperation"
     )
     public void testDeletePlayerWithWrongBodyParams(PlayerRole role, String body, int statusCode, String message) {

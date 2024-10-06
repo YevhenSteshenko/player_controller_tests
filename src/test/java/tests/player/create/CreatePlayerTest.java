@@ -6,23 +6,25 @@ import _annotations_description.BackendStory;
 import api._general.models.Gender;
 import api._general.models.PlayerRole;
 import api.player.request.PlayerRequest;
+import api.player.request.models.PlayerCreateRequestDTO;
 import api.player.response.models.PlayerCreateResponseDTO;
 import io.qameta.allure.*;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
+import tests.BaseTest;
 import tests.player.PlayerHelper;
 
 @Epic(BackendEpic.API)
 @Feature(BackendFeature.PLAYER)
 @Stories(@Story(BackendStory.CREATE))
-public class CreatePlayerTest {
+public class CreatePlayerTest extends BaseTest {
 
     @Issue("2")
-    @Test(groups = {"all", "parallel"}
-            , description = "Create player"
+    @Test(description = "Create player"
+            , groups = {"all", "create_player"}
             , dataProvider = "validData")
-    public void testCreatePlayer(PlayerRole editor, PlayerCreateResponseDTO player) {
+    public void testCreatePlayer(PlayerRole editor, PlayerCreateRequestDTO player) {
         PlayerCreateResponseDTO actualResult = new PlayerRequest()
                 .createPlayer(editor, player, 200)
                 .as(PlayerCreateResponseDTO.class);
@@ -39,21 +41,21 @@ public class CreatePlayerTest {
     }
 
     @Issue("4")
-    @Test(groups = {"all", "parallel"}
-            , description = "Try to create existed Player"
+    @Test(description = "Try to create existed Player"
+            , groups = {"all", "create_player"}
     )
     public void testCreateExistPlayer() {
-        PlayerCreateResponseDTO player = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
+        PlayerCreateRequestDTO player = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
         new PlayerRequest().createPlayer(PlayerRole.SUPERVISOR, player, 200);
-        PlayerCreateResponseDTO newPlayer = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
+        PlayerCreateRequestDTO newPlayer = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
         new PlayerRequest().createPlayer(PlayerRole.SUPERVISOR, newPlayer.login(player.login()), 400);
     }
 
     @Issue("3")
-    @Test(groups = {"all", "parallel"}
-            , description = "Create player(negative scenarios)"
+    @Test(description = "Create player(negative scenarios)"
+            , groups = {"all", "create_player"}
             , dataProvider = "invalidData")
-    public void testCreatePlayerWithInvalidData(PlayerRole editor, PlayerCreateResponseDTO player, int statusCode, String description) {
+    public void testCreatePlayerWithInvalidData(PlayerRole editor, PlayerCreateRequestDTO player, int statusCode, String description) {
         new PlayerRequest()
                 .createPlayer(editor, player, statusCode);
     }

@@ -6,6 +6,7 @@ import _annotations_description.BackendStory;
 import api._general.models.Gender;
 import api._general.models.PlayerRole;
 import api.player.request.PlayerRequest;
+import api.player.request.models.PlayerCreateRequestDTO;
 import api.player.response.models.PlayerCreateResponseDTO;
 import com.google.gson.Gson;
 import io.qameta.allure.*;
@@ -13,6 +14,7 @@ import org.hamcrest.Matchers;
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import tests.BaseTest;
 import tests.player.PlayerHelper;
 
 import java.util.HashMap;
@@ -21,19 +23,27 @@ import java.util.Map;
 @Epic(BackendEpic.API)
 @Feature(BackendFeature.PLAYER)
 @Stories(@Story(BackendStory.GET_PLAYER))
-public class GetPlayerByIdTest {
+public class GetPlayerByIdTest extends BaseTest {
 
-    @Test(groups = {"all", "parallel"}
-            , description = "POST /player/get returns correct data for present user and deleted")
+    @Test(description = "POST /player/get returns correct data for present user and deleted"
+            , groups = {"all", "get_player_by_id"}
+    )
     public void testGetPlayerById() {
-        PlayerCreateResponseDTO newPlayerData = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
+        PlayerCreateRequestDTO newPlayerData = PlayerHelper.generatePlayerCreateData(Gender.MALE, PlayerRole.USER);
         PlayerCreateResponseDTO createPlayerData = new PlayerRequest()
                 .createPlayer(PlayerRole.SUPERVISOR, newPlayerData, 200)
                 .as(PlayerCreateResponseDTO.class);
         PlayerCreateResponseDTO fetchPlayerData = new PlayerRequest()
                 .getPlayerByID(createPlayerData.id(), 200).as(PlayerCreateResponseDTO.class);
 
-        Assert.assertEquals(fetchPlayerData, newPlayerData.id(createPlayerData.id())
+        Assert.assertEquals(fetchPlayerData,
+                createPlayerData
+                        .login(newPlayerData.login())
+                        .password(newPlayerData.password())
+                        .screenName(newPlayerData.screenName())
+                        .age(newPlayerData.age())
+                        .role(newPlayerData.role())
+                        .gender(newPlayerData.gender())
                 , "There is a difference between Created Player Data and Fetch data");
 
         new PlayerRequest().deletePlayer(PlayerRole.SUPERVISOR, createPlayerData.id(), 204);
@@ -43,8 +53,8 @@ public class GetPlayerByIdTest {
     }
 
     @Issue("7")
-    @Test(groups = {"all", "parallel"}
-            , description = "Try to get Player Data via invalid requests"
+    @Test(description = "Try to get Player Data via invalid requests"
+            , groups = {"all", "get_player_by_id"}
             , dataProvider = "invalidData")
     public void testGetPlayerByIdNegative(String body, int statusCode, String message) {
         new PlayerRequest().getPlayerByID(body, statusCode);
