@@ -101,7 +101,7 @@ For `env=rel` will be set or [rel.v1.properties](./src/test/resources/rel.v1.pro
 depends on which `api_version` set in [default.properties](./src/test/resources/default.properties)
 
 ### Parameter api_version
-Parameters `env` and `api_version` working together and set which `.properties` file will be chosen for framework configuration
+Parameters `env` and `api_version` working together and set which `.properties` file will be chosen for framework configuration. All files is [here](./src/test/resources)
 
 ### Parameter thread
 `thread` expected values: int value from 1 to ... . `thread` set how many threads will be used for test run.
@@ -170,7 +170,7 @@ Set any parameter with flag `-D` to set it.
 
 *Example:*
 ```groovy
-./gradlew clean test -Dsuites="src/test/resources/test_suites/api.player.create.suite.xml src/test/resources/test_suites/api.suite.xml" -Dthread=5 -Denv=rel -Dapi_version=v1 -Dparallel=methods --info
+./gradlew clean test -Dsuites="src/test/resources/test_suites/api.player.create.suite.xml src/test/resources/test_suites/api.player.suite.xml" -Dthread=5 -Denv=rel -Dapi_version=v1 -Dparallel=classes --info
 ```
 ### Report
 Report data saved in [build](./build) directory.
