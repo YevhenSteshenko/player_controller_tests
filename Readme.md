@@ -9,6 +9,7 @@ Project presents framework for Backend testing which use as a Example tests for 
 ### [Preparations](#preparations)
 ### [Run Tests](#run-tests)
 ### [Custom Test Run](#custom-test-run)
+### [Bugs](#bugs)
 
 ## Project Features
 #### Technical stack:
@@ -180,4 +181,5 @@ Report could be generated and open with command:
 ```
 Here you find information about `Environment` setup which used for this test run. Also information about test statuses, how many threads using and details in test steps.
 
-
+## Bugs
+Bugs described [here](./Bugs)
