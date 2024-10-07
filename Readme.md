@@ -129,13 +129,13 @@ Now tests will show correct results only for `parallel=classes`. If need to use 
 
 ### Custom Test Run 
 
-If you need to run tests with other parameters then you have few options:
-* Change parameters in [default.properties](./src/test/resources/default.properties)
+There are a few options to run tests with custom parameters:
+* Set parameters in [default.properties](./src/test/resources/default.properties)
 * Set Parameters by default in [build.gradle](./build.gradle). 
 * Set Parameters in Commandline
 
  **Note:**  
- If you want to make changes in [build.gradle](./build.gradle) then you need to switch of this parameter/-rs [default.properties](./src/test/resources/default.properties)
+ If you want to make changes in [build.gradle](./build.gradle) then you need to switch off this parameter/-rs [default.properties](./src/test/resources/default.properties)
 Because Framework use next priority: Commandline -> default.properties -> Default value
 
 ### Change Parameters in [default.properties](./src/test/resources/default.properties)
