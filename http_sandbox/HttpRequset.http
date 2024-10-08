@@ -1,0 +1,41 @@
+### Create new Player
+GET http://3.68.165.45/player/create/supervisor?age=20&gender=male&login=dad&password=6XQxeHTxrasS&role=user&screenName=Pazuzu_player
+Content-Type: application/json
+Accept: */*
+
+### GET player by playerId
+POST http://3.68.165.45/player/get
+Content-Type: application/json
+Accept: */*
+
+{
+  "playerId": 1591736253
+}
+
+### GET all Players
+GET http://3.68.165.45/player/get/all
+Content-Type: application/json
+Accept: */*
+
+### Update Player
+PATCH http://3.68.165.45/player/update/supervisor/261473170
+Content-Type: application/json
+Accept: */*
+
+{
+  "age": 20,
+  "gender": "male",
+  "login": "some_password",
+  "password": "some_password",
+  "role": "user",
+  "screenName": "Pazuzu"
+}
+
+### Delete Player
+DELETE http://3.68.165.45/player/delete/1
+Content-Type: application/json
+Accept: */*
+
+{
+  "playerId": 1591736253
+}
